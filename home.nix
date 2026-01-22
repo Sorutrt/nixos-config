@@ -1,8 +1,10 @@
-{ config, pkgs, inputs, ... }:
+{ config, nixpkgs, inputs, ... }:
 let
-  pkgsUnstable = import inputs.nixpkgs-unstable {
-    system = pkgs.system;
+{
+  pkgs = import nixpkgs {
+    inherit system;
     config.allowUnfree = true;
+  };
 };
 in
 {
@@ -12,8 +14,7 @@ in
   home.packages = with pkgs; [
     nnn
     lazygit
-  ] ++ [
-    pkgsUnstable.jujutsu
+    jujutsu
   ];
 
   programs.home-manager.enable = true;

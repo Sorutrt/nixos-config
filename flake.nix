@@ -5,13 +5,13 @@
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager {
+    home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixos-wsl, home-manager, ... }: {
+  outputs = { self, nixpkgs, nixos-wsl, home-manager, ... }@inputs: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -31,16 +31,10 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.nixos = { pkgs, ... }:
-            let
-              pkgsUnstable = import inputs.nixpkgs-unstable { system = pkgs.system; };
-            in
-            {
-              _module.args = { inherit pkgsUnstable; };
-              imports = [ ./home.nix ];
-            };
+            home-manager.users.nixos = import ./home.nix;
           }
         ];
+        specialArgs = { inherit nixos-wsl; };
       };
     }; 
   };
