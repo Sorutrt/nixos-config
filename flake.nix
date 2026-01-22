@@ -1,0 +1,40 @@
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    home-manager.url = "github:nix-community/home-manager/release-24.11";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixos-wsl, home-manager, ... }: {
+    nixosConfigurations = {
+      nixos = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+
+	specialArgs = { inherit inputs; };
+
+        modules = [
+          ./hosts/nixos/configuration.nix
+         
+          #wsl-setting
+          nixos-wsl.nixosModules.default
+          {
+            system.stateVersion = "24.11";
+            wsl.enable = true;
+          }
+          
+          # home-manager settings
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.nixos = import ./home.nix;
+          }
+        ];
+      };
+    }; 
+  };
+}
+
