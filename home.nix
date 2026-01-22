@@ -3,7 +3,7 @@ let
   pkgsUnstable = import inputs.nixpkgs-unstable {
     system = pkgs.system;
     config.allowUnfree = true;
-}
+};
 in
 {
   home.username = "nixos";
