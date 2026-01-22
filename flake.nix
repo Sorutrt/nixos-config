@@ -13,8 +13,6 @@
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
 
-	specialArgs = { inherit inputs; };
-
         modules = [
           ./hosts/nixos/configuration.nix
          
@@ -27,10 +25,17 @@
           
           # home-manager settings
           home-manager.nixosModules.home-manager
-          {
+	  {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.nixos = import ./home.nix;
+	    home-manager.users.nixos = { pkgs, ... }:
+	    let
+	      pkgsUnstable = import inputs.nixpkgs-unstable { system = pkgs.system; };
+	    in
+	    {
+	      _module.args = { inherit pkgsUnstable; };
+	      imports = [ ./home.nix ];
+	    };
           }
         ];
       };
