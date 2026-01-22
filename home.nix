@@ -1,11 +1,8 @@
 { config, nixpkgs, inputs, ... }:
 let
-{
   pkgs = import nixpkgs {
-    inherit system;
     config.allowUnfree = true;
   };
-};
 in
 {
   home.username = "nixos";
