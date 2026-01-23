@@ -29,12 +29,14 @@
           ({ config, pkgs, ... }: {
             nixpkgs.config.allowUnfree = true;
 
-            nixpkgs.overlays = final: prev: {
+            nixpkgs.overlays = [
+              (final: prev: {
                 unstable = import nixpkgs-unstable {
-                  inherit system;
+                  system = prev.system;
                   config = prev.config; # allowUnfree などを引き継ぎ
                 };
-            };
+              })
+            ];
           })
 
           # home-manager settings
