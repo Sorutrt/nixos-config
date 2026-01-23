@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -12,10 +13,18 @@
 
   };
 
-  outputs = { self, nixpkgs, nixos-wsl, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, nixos-wsl, home-manager, ... }@inputs: 
+  let
+    system = "x86_64-linux";
+  in
+  {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+        inherit system;
+        specialArgs = {
+          inherit system;
+          unstablePkgs = nixpkgs-unstable.legacyPackages.${system};
+        };
 
         modules = [
           nixos-wsl.nixosModules.default
@@ -32,7 +41,6 @@
             system.stateVersion = "25.05";
           }
         ];
-        specialArgs = { inherit nixos-wsl; };
       };
     }; 
   };
