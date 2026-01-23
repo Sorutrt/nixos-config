@@ -13,7 +13,7 @@
 
   };
 
-  outputs = { self, nixpkgs, nixos-wsl, home-manager, ... }@inputs: 
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-wsl, home-manager, ... }@inputs: 
   let
     system = "x86_64-linux";
   in
