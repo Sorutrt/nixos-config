@@ -1,9 +1,5 @@
-{ config, nixpkgs, inputs, ... }:
-let
-  pkgs = import nixpkgs {
-    config.allowUnfree = true;
-  };
-in
+{ config, pkgs, inputs, ... }:
+
 {
   home.username = "nixos";
   home.homeDirectory = "/home/nixos";
