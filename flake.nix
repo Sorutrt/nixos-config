@@ -10,7 +10,6 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, nixos-wsl, home-manager, ... }@inputs: 
@@ -21,15 +20,25 @@
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = {
-          inherit system;
-          unstablePkgs = nixpkgs-unstable.legacyPackages.${system};
-        };
 
         modules = [
           nixos-wsl.nixosModules.default
           ./hosts/nixos/configuration.nix
          
+          # nigpkgs unstable overlay
+          ({ config, pkgs, ... }: {
+            nixpkgs.config.allowUnfree = true;
+
+            nixpkgs.overlays = {
+              (final: prev: {
+                unstable = import nixpkgs-unstable {
+                  inherit system;
+                  config = prev.config; # allowUnfree などを引き継ぎ
+                };
+              })
+            };
+          })
+
           # home-manager settings
           home-manager.nixosModules.home-manager
           {

@@ -1,4 +1,4 @@
-{ config, pkgs, unstablePkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   home.username = "nixos";
@@ -7,8 +7,7 @@
   home.packages = (with pkgs; [
     nnn
     lazygit
-  ]) ++ [
-    unstablePkgs.jujutsu
+    unstable.jujutsu
   ];
 
   programs.home-manager.enable = true;
