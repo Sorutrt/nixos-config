@@ -7,9 +7,9 @@
   home.packages = (with pkgs; [
     nnn
     lazygit
-  ]) ++ (with unstablePkgs; [
-    jujutsu
-  ]);
+  ]) ++ [
+    unstablePkgs.jujutsu
+  ];
 
   programs.home-manager.enable = true;
 }
