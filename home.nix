@@ -5,13 +5,20 @@
   home.homeDirectory = "/home/nixos";
   home.stateVersion = "25.05";
   home.packages = with pkgs; [
+    # common tools
+    wget
+    vim
+
+    # VCS
     git
-    nnn
     lazygit
     unstable.jujutsu
+
+    # AI
     codex
-    wget
-    zsh
+
+    nnn
+    nushell
   ];
 
   programs.home-manager.enable = true;
